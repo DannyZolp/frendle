@@ -27,17 +27,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   supabase.auth.onAuthStateChange((event) => {
     switch (event) {
       case "SIGNED_IN":
-        if (unprotectedRoutes.includes(router.basePath)) {
+        if (unprotectedRoutes.includes(router.pathname)) {
           router.push("/play");
         }
         break;
       case "SIGNED_OUT":
-        if (protectedRoutes.includes(router.basePath)) {
+        if (protectedRoutes.includes(router.pathname)) {
           router.push("/");
         }
         break;
       case "USER_DELETED":
-        if (protectedRoutes.includes(router.basePath)) {
+        if (protectedRoutes.includes(router.pathname)) {
           router.push("/");
         }
         break;
@@ -46,11 +46,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (supabase.auth.session() === null) {
-      if (protectedRoutes.includes(router.basePath)) {
+      if (protectedRoutes.includes(router.pathname)) {
         router.push("/");
       }
     } else {
-      if (unprotectedRoutes.includes(router.basePath)) {
+      if (unprotectedRoutes.includes(router.pathname)) {
         router.push("/play");
       }
     }
