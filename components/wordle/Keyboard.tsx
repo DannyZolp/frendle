@@ -65,7 +65,7 @@ export const Keyboard = ({
           style={{
             display: "flex",
             justifyContent: "center",
-            width: "90%",
+            width: "90vw",
             maxWidth: "400px",
             padding: "4px"
           }}

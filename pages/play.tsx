@@ -63,7 +63,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
           setCurrentGuess(currentGuess.slice(0, currentGuess.length - 1));
         } else if (ev.code === "Enter") {
           tryNextRow();
-        } else if (ev.code.startsWith("Key")) {
+        } else if (ev.code.startsWith("Key") && currentGuess.length < 5) {
           setCurrentGuess(currentGuess + ev.key.toLowerCase());
         }
       }
@@ -111,7 +111,9 @@ const Play = ({ supabase }: FrendlePageProps) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: "column"
+        flexDirection: "column",
+        height: "100vh",
+        width: "100vw"
       }}
     >
       {/* <input
@@ -124,7 +126,12 @@ const Play = ({ supabase }: FrendlePageProps) => {
         placeholder="Guess"
       />
       <button onClick={tryNextRow}>Next</button> */}
-      <div>
+      <div
+        style={{
+          position: "absolute",
+          top: "2vh"
+        }}
+      >
         {rowOverlay.map((overlay, idx) => (
           <Row
             correct={correct}
@@ -134,20 +141,31 @@ const Play = ({ supabase }: FrendlePageProps) => {
           />
         ))}
       </div>
-      <Keyboard
-        correct={correctLetters}
-        yellow={yellowLetters}
-        wrong={wrongLetters}
-        onClick={(k) =>
-          setCurrentGuess(lock ? "" : currentGuess + k.toLowerCase())
-        }
-        onBackspace={() =>
-          setCurrentGuess(
-            lock ? "" : currentGuess.slice(0, currentGuess.length - 1)
-          )
-        }
-        onSubmit={tryNextRow}
-      />
+      <div
+        style={{
+          width: "100vw",
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          position: "absolute",
+          bottom: 0
+        }}
+      >
+        <Keyboard
+          correct={correctLetters}
+          yellow={yellowLetters}
+          wrong={wrongLetters}
+          onClick={(k) =>
+            setCurrentGuess(lock ? "" : currentGuess + k.toLowerCase())
+          }
+          onBackspace={() =>
+            setCurrentGuess(
+              lock ? "" : currentGuess.slice(0, currentGuess.length - 1)
+            )
+          }
+          onSubmit={tryNextRow}
+        />
+      </div>
     </div>
   );
 };
