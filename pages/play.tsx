@@ -48,11 +48,27 @@ const Play = ({ supabase }: FrendlePageProps) => {
   const [correctLetters, setCorrectLetters] = useState<string[]>([]);
   const [yellowLetters, setYellowLetters] = useState<string[]>([]);
   const [wrongLetters, setWrongLetters] = useState<string[]>([]);
+  const [lock, setLock] = useState(false);
 
   useEffect(() => {
     // get the current word
     setCorrect(words[differenceInDays(new Date(), new Date("June 19 2021"))]);
   }, []);
+
+  useEffect(() => {
+    document.onkeydown = (ev) => {
+      ev.preventDefault();
+      if (!lock) {
+        if (ev.code === "Backspace") {
+          setCurrentGuess(currentGuess.slice(0, currentGuess.length - 1));
+        } else if (ev.code === "Enter") {
+          tryNextRow();
+        } else if (ev.code.startsWith("Key")) {
+          setCurrentGuess(currentGuess + ev.key.toLowerCase());
+        }
+      }
+    };
+  }, [currentGuess, lock]);
 
   useEffect(() => {
     let rows = [...rowText];
@@ -62,7 +78,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
   }, [currentGuess, currentRow]);
 
   const tryNextRow = () => {
-    if (currentGuess.length === correct.length) {
+    if (currentGuess.length === correct.length && !lock) {
       if (guessable.includes(currentGuess) || words.includes(currentGuess)) {
         let rowState = [...rowOverlay];
         rowState[currentRow] = true;
@@ -80,11 +96,12 @@ const Play = ({ supabase }: FrendlePageProps) => {
         setWrongLetters(wrong.concat(wrongLetters));
 
         setCurrentGuess("");
-      } else {
-        alert("Not a word");
+
+        if (lCorrect.length === correct.length) {
+          // the user has guessed it
+          setLock(true);
+        }
       }
-    } else {
-      alert("Not long enough");
     }
   };
 
@@ -121,9 +138,13 @@ const Play = ({ supabase }: FrendlePageProps) => {
         correct={correctLetters}
         yellow={yellowLetters}
         wrong={wrongLetters}
-        onClick={(k) => setCurrentGuess(currentGuess + k.toLowerCase())}
+        onClick={(k) =>
+          setCurrentGuess(lock ? "" : currentGuess + k.toLowerCase())
+        }
         onBackspace={() =>
-          setCurrentGuess(currentGuess.slice(0, currentGuess.length - 1))
+          setCurrentGuess(
+            lock ? "" : currentGuess.slice(0, currentGuess.length - 1)
+          )
         }
         onSubmit={tryNextRow}
       />

@@ -19,41 +19,62 @@ const convertAnswerToRedCellState = (answer: string) => {
   return cells;
 };
 
-const findDoubles = (word: string) => {
-  let doubles = [] as string[];
-  let checked = [] as string[];
+const countLetters = (word: string, letter: string) => {
+  let count = 0;
 
   for (let i = 0; i < word.length; i++) {
-    if (checked.includes(word.charAt(i))) {
-      doubles.push(word.charAt(i));
-    } else {
-      checked.push(word.charAt(i));
+    if (word.charAt(i) === letter) {
+      count++;
     }
   }
 
-  return doubles;
+  return count;
 };
 
 const overlayAnswerToGuess = (answer: string, guess: string) => {
-  let alreadyMarked = [] as string[];
-  let doubles = findDoubles(answer);
+  let cells = new Array<CellType>(answer.length);
+  let finished = new Array<boolean>(guess.length);
+  let correctLetters = new Array<string>();
 
-  let cells = [];
+  // first, do the correct pass
   for (let i = 0; i < guess.length; i++) {
     if (answer.charAt(i) === guess.charAt(i)) {
-      cells.push(CellType.GREEN);
-    } else if (
-      !doubles.includes(guess.charAt(i)) &&
-      alreadyMarked.includes(answer.charAt(i))
-    ) {
-      cells.push(CellType.WRONG);
-    } else if (answer.includes(guess.charAt(i))) {
-      cells.push(CellType.YELLOW);
-    } else {
-      cells.push(CellType.WRONG);
+      cells[i] = CellType.GREEN;
+      finished[i] = true;
+      correctLetters.push(guess.charAt(i));
     }
-    alreadyMarked.push(answer.charAt(i));
   }
+
+  // now, do the yellow pass
+  for (let i = 0; i < guess.length; i++) {
+    if (
+      !finished[i] &&
+      !correctLetters.includes(guess.charAt(i)) &&
+      answer.includes(guess.charAt(i))
+    ) {
+      cells[i] = CellType.YELLOW;
+      finished[i] = true;
+    } else if (
+      !finished[i] &&
+      correctLetters.includes(guess.charAt(i)) &&
+      answer.includes(guess.charAt(i))
+    ) {
+      if (countLetters(answer, guess.charAt(i)) > 1) {
+        cells[i] = CellType.YELLOW;
+      } else {
+        cells[i] = CellType.WRONG;
+      }
+      finished[i] = true;
+    }
+  }
+
+  // make everything else wrong
+  for (let i = 0; i < guess.length; i++) {
+    if (!finished[i]) {
+      cells[i] = CellType.WRONG;
+    }
+  }
+
   return cells;
 };
 
