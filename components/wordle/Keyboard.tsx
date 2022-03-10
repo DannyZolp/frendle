@@ -65,7 +65,7 @@ export const Keyboard = ({
           style={{
             display: "flex",
             justifyContent: "center",
-            width: "100%",
+            width: "90%",
             maxWidth: "400px",
             padding: "4px"
           }}
@@ -75,7 +75,14 @@ export const Keyboard = ({
             rowIdx === 2 && keyIdx === 0 ? (
               <>
                 <SpecialKey key={"enter"} onClick={() => onSubmit()}>
-                  <KeyText>ENTER</KeyText>
+                  <KeyText>
+                    <Image
+                      src={"/icons/enter.svg"}
+                      alt={"submit icon"}
+                      height={"24px"}
+                      width={"24px"}
+                    />
+                  </KeyText>
                 </SpecialKey>
 
                 <Key
@@ -102,8 +109,8 @@ export const Keyboard = ({
                     <Image
                       src={"/icons/backspace.svg"}
                       alt={"backspace icon"}
-                      height={"18px"}
-                      width={"18px"}
+                      height={"24px"}
+                      width={"24px"}
                     />
                   </KeyText>
                 </SpecialKey>

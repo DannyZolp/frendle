@@ -92,7 +92,7 @@ export const Row = ({ guess, correct, overlayCorrect }: RowProps) => {
   return (
     <div style={{ display: "flex" }}>
       {cellState.map((state, idx) => (
-        <Cell key={idx} type={state}>
+        <Cell key={idx} type={state} letters={cellState.length}>
           <CellText>{cellLetters[idx]}</CellText>
         </Cell>
       ))}

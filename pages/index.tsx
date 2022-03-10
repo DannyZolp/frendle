@@ -1,90 +1,32 @@
-import { differenceInDays } from "date-fns";
-import { useEffect, useState } from "react";
-import { Row } from "../components/wordle/Row";
-import words from "../public/words.json";
-import guessable from "../public/guessable.json";
-import { Keyboard } from "../components/wordle/Keyboard";
+import Image from "next/image";
+import { useState } from "react";
+import { Box } from "../components/login/Box";
+import { Button } from "../components/login/Button";
+import { Input } from "../components/login/Input";
+import { FrendlePageProps } from "./_app";
+import { toast } from "react-toastify";
 
-interface CorrectYellowWrongOutput {
-  correct: string[];
-  yellow: string[];
-  wrong: string[];
-}
+const Index = ({ supabase }: FrendlePageProps) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-const getCorrectYellowWrong = (
-  guess: string,
-  answer: string
-): CorrectYellowWrongOutput => {
-  let correct = [] as string[];
-  let yellow = [] as string[];
-  let wrong = [] as string[];
-
-  for (let i = 0; i < guess.length; i++) {
-    if (answer.charAt(i) === guess.charAt(i)) {
-      correct.push(guess.charAt(i).toUpperCase());
-    } else if (answer.includes(guess.charAt(i))) {
-      yellow.push(guess.charAt(i).toUpperCase());
-    } else {
-      wrong.push(guess.charAt(i).toUpperCase());
-    }
-  }
-
-  return {
-    correct,
-    yellow,
-    wrong
+  const loginWithEmail = () => {
+    supabase.auth
+      .signIn({
+        email,
+        password
+      })
+      .then((value) => {
+        if (value.error) {
+          toast.error(value.error.message);
+        }
+      });
   };
-};
 
-const Index = () => {
-  const [correct, setCorrect] = useState("");
-  const [rowText, setRowText] = useState<string[]>(new Array(6).fill(""));
-  const [rowOverlay, setRowOverlay] = useState<boolean[]>(
-    new Array(6).fill(false)
-  );
-  const [currentRow, setCurrentRow] = useState(0);
-  const [currentGuess, setCurrentGuess] = useState("");
-  const [correctLetters, setCorrectLetters] = useState<string[]>([]);
-  const [yellowLetters, setYellowLetters] = useState<string[]>([]);
-  const [wrongLetters, setWrongLetters] = useState<string[]>([]);
-
-  useEffect(() => {
-    // get the current word
-    setCorrect(words[differenceInDays(new Date(), new Date("June 19 2021"))]);
-  }, []);
-
-  useEffect(() => {
-    let rows = [...rowText];
-    rows[currentRow] = currentGuess;
-    setRowText(rows);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentGuess, currentRow]);
-
-  const tryNextRow = () => {
-    if (currentGuess.length === correct.length) {
-      if (guessable.includes(currentGuess) || words.includes(currentGuess)) {
-        let rowState = [...rowOverlay];
-        rowState[currentRow] = true;
-        setRowOverlay(rowState);
-        setCurrentRow(currentRow + 1);
-
-        const {
-          correct: lCorrect,
-          yellow,
-          wrong
-        } = getCorrectYellowWrong(currentGuess, correct);
-
-        setCorrectLetters(lCorrect.concat(correctLetters));
-        setYellowLetters(yellow.concat(yellowLetters));
-        setWrongLetters(wrong.concat(wrongLetters));
-
-        setCurrentGuess("");
-      } else {
-        alert("Not a word");
-      }
-    } else {
-      alert("Not long enough");
-    }
+  const loginWithDiscord = () => {
+    supabase.auth.signIn({
+      provider: "discord"
+    });
   };
 
   return (
@@ -93,39 +35,46 @@ const Index = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: "column"
+        height: "100vh"
       }}
     >
-      {/* <input
-        onChange={(e) => {
-          if (e.target.value.length <= correct.length) {
-            setCurrentGuess(e.target.value);
-          }
-        }}
-        value={currentGuess}
-        placeholder="Guess"
-      />
-      <button onClick={tryNextRow}>Next</button> */}
-      <div>
-        {rowOverlay.map((overlay, idx) => (
-          <Row
-            correct={correct}
-            guess={rowText[idx]}
-            overlayCorrect={overlay}
-            key={idx}
+      <Box>
+        <h1 style={{ margin: "1px" }}>Login</h1>
+        <Input
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          bgColor="#444"
+          style={{ marginTop: "2.5%", padding: "14px 16px" }}
+          onClick={loginWithEmail}
+        >
+          Login with Email
+        </Button>
+        <hr
+          style={{
+            border: "none",
+            backgroundColor: "#444",
+            height: "1px",
+            margin: "2rem 1rem"
+          }}
+        />
+        <Button bgColor="#404eed" onClick={loginWithDiscord}>
+          <Image
+            src="/icons/login-with-discord.svg"
+            alt="discord logo"
+            width={146}
+            height={40}
           />
-        ))}
-      </div>
-      <Keyboard
-        correct={correctLetters}
-        yellow={yellowLetters}
-        wrong={wrongLetters}
-        onClick={(k) => setCurrentGuess(currentGuess + k.toLowerCase())}
-        onBackspace={() =>
-          setCurrentGuess(currentGuess.slice(0, currentGuess.length - 1))
-        }
-        onSubmit={tryNextRow}
-      />
+        </Button>
+      </Box>
     </div>
   );
 };

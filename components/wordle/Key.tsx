@@ -41,6 +41,6 @@ export const SpecialKey = styled.button`
 
 export const KeyText = styled.h2`
   color: white;
-  font-size: 14px;
+  font-size: 100%;
   font-family: "Poppins", sans-serif;
 `;

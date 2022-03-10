@@ -10,6 +10,7 @@ export enum CellType {
 
 interface CellProps {
   type: CellType;
+  letters: number;
 }
 
 export const Cell = styled.div<CellProps>`
@@ -17,8 +18,10 @@ export const Cell = styled.div<CellProps>`
   align-items: center;
   justify-content: center;
   padding: 4px;
-  height: 3rem;
-  width: 3rem;
+  height: calc(60vw / ${(props) => props.letters});
+  width: calc(60vw / ${(props) => props.letters});
+  max-height: 4rem;
+  max-width: 4rem;
   transition: 0.2s;
   background-color: ${(props) =>
     props.type === CellType.WRONG
