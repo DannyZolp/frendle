@@ -71,61 +71,40 @@ export const Keyboard = ({
           }}
           key={rowIdx}
         >
-          {row.map((key, keyIdx) =>
-            rowIdx === 2 && keyIdx === 0 ? (
-              <>
-                <SpecialKey key={"enter"} onClick={() => onSubmit()}>
-                  <KeyText>
-                    <Image
-                      src={"/icons/enter.svg"}
-                      alt={"submit icon"}
-                      height={"24px"}
-                      width={"24px"}
-                    />
-                  </KeyText>
-                </SpecialKey>
-
-                <Key
-                  key={keyIdx}
-                  state={keyboardStates[rowIdx][keyIdx]}
-                  others={keyboardStates[rowIdx].length}
-                  onClick={() => onClick(key)}
-                >
-                  <KeyText>{key}</KeyText>
-                </Key>
-              </>
-            ) : rowIdx === 2 && keyIdx === 6 ? (
-              <>
-                <Key
-                  key={keyIdx}
-                  state={keyboardStates[rowIdx][keyIdx]}
-                  others={keyboardStates[rowIdx].length}
-                  onClick={() => onClick(key)}
-                >
-                  <KeyText>{key}</KeyText>
-                </Key>
-                <SpecialKey key={"backspace"} onClick={() => onBackspace()}>
-                  <KeyText>
-                    <Image
-                      src={"/icons/backspace.svg"}
-                      alt={"backspace icon"}
-                      height={"24px"}
-                      width={"24px"}
-                    />
-                  </KeyText>
-                </SpecialKey>
-              </>
-            ) : (
-              <Key
-                key={keyIdx}
-                state={keyboardStates[rowIdx][keyIdx]}
-                others={keyboardStates[rowIdx].length}
-                onClick={() => onClick(key)}
-              >
-                <KeyText>{key}</KeyText>
-              </Key>
-            )
-          )}
+          {rowIdx === 2 ? (
+            <SpecialKey key={"enter"} onClick={() => onSubmit()}>
+              <KeyText>
+                <Image
+                  src={"/icons/enter.svg"}
+                  alt={"submit icon"}
+                  height={"24px"}
+                  width={"24px"}
+                />
+              </KeyText>
+            </SpecialKey>
+          ) : null}
+          {row.map((key, keyIdx) => (
+            <Key
+              key={keyIdx}
+              state={keyboardStates[rowIdx][keyIdx]}
+              others={keyboardStates[rowIdx].length}
+              onClick={() => onClick(key)}
+            >
+              <KeyText>{key}</KeyText>
+            </Key>
+          ))}
+          {rowIdx === 2 ? (
+            <SpecialKey key={"backspace"} onClick={() => onBackspace()}>
+              <KeyText>
+                <Image
+                  src={"/icons/backspace.svg"}
+                  alt={"backspace icon"}
+                  height={"24px"}
+                  width={"24px"}
+                />
+              </KeyText>
+            </SpecialKey>
+          ) : null}
         </div>
       ))}
     </>
