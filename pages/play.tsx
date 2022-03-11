@@ -34,7 +34,7 @@ const getCorrectYellowWrong = (
   return {
     correct,
     yellow,
-    wrong,
+    wrong
   };
 };
 
@@ -59,7 +59,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
     // check the cloud for previous saves for today
     supabase
       .from<definitions["wordle"]>("wordle")
-      .select("guesses, created_at")
+      .select("guesses, created_at, id")
       .then(async ({ data }) => {
         if (data && (data?.length ?? 0) > 0) {
           // the user has made a save in the past
@@ -84,7 +84,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
                 const {
                   correct: lCorrect,
                   yellow,
-                  wrong,
+                  wrong
                 } = getCorrectYellowWrong(guesses[len - 1], correct);
 
                 setCorrectLetters(lCorrect.concat(correctLetters));
@@ -107,7 +107,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
             .from<definitions["wordle"]>("wordle")
             .insert({
               guesses: rowText,
-              owner_id: supabase.auth.user()?.id,
+              owner_id: supabase.auth.user()?.id
             })
             .then(({ data }) => {
               if (data) {
@@ -120,7 +120,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
             .from<definitions["wordle"]>("wordle")
             .insert({
               guesses: rowText,
-              owner_id: supabase.auth.user()?.id,
+              owner_id: supabase.auth.user()?.id
             })
             .then(({ data }) => {
               if (data) {
@@ -139,9 +139,12 @@ const Play = ({ supabase }: FrendlePageProps) => {
       supabase
         .from<definitions["wordle"]>("wordle")
         .update({
-          guesses: rowText,
+          guesses: rowText
         })
-        .eq("id", wordleId);
+        .eq("id", wordleId)
+        .then(() => {
+          console.log("completed save");
+        });
     }
   }, [currentRow, wordleId]);
 
@@ -178,7 +181,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
         const {
           correct: lCorrect,
           yellow,
-          wrong,
+          wrong
         } = getCorrectYellowWrong(currentGuess, correct);
 
         setCorrectLetters(lCorrect.concat(correctLetters));
@@ -203,7 +206,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
         justifyContent: "center",
         flexDirection: "column",
         height: "100vh",
-        width: "100vw",
+        width: "100vw"
       }}
     >
       {/* <input
@@ -219,7 +222,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
       <div
         style={{
           position: "absolute",
-          top: "2vh",
+          top: "2vh"
         }}
       >
         {rowOverlay.map((overlay, idx) => (
@@ -238,7 +241,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
           alignItems: "center",
           flexDirection: "column",
           position: "absolute",
-          bottom: 0,
+          bottom: 0
         }}
       >
         <Keyboard
