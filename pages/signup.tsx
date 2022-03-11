@@ -1,19 +1,18 @@
-import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { Box } from "../components/login/Box";
 import { Button } from "../components/login/Button";
 import { Input } from "../components/login/Input";
 import { FrendlePageProps } from "./_app";
-import { toast } from "react-toastify";
-import Link from "next/link";
 
-const Index = ({ supabase }: FrendlePageProps) => {
+const Signup = ({ supabase }: FrendlePageProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const loginWithEmail = () => {
     supabase.auth
-      .signIn({
+      .signUp({
         email,
         password
       })
@@ -22,12 +21,6 @@ const Index = ({ supabase }: FrendlePageProps) => {
           toast.error(value.error.message);
         }
       });
-  };
-
-  const loginWithDiscord = () => {
-    supabase.auth.signIn({
-      provider: "discord"
-    });
   };
 
   return (
@@ -40,7 +33,7 @@ const Index = ({ supabase }: FrendlePageProps) => {
       }}
     >
       <Box>
-        <h1 style={{ margin: "1px" }}>Login</h1>
+        <h1 style={{ margin: "1px" }}>Sign Up</h1>
         <Input
           placeholder="Email address"
           value={email}
@@ -57,32 +50,16 @@ const Index = ({ supabase }: FrendlePageProps) => {
           style={{ marginTop: "2.5%", padding: "14px 16px" }}
           onClick={loginWithEmail}
         >
-          Login with Email
+          Sign Up with Email
         </Button>
-        <Link href="/signup" passHref>
+        <Link href="/" passHref>
           <a style={{ color: "white", fontSize: "14px", margin: "0" }}>
-            sign up?
+            login?
           </a>
         </Link>
-        <hr
-          style={{
-            border: "none",
-            backgroundColor: "#444",
-            height: "1px",
-            margin: "1rem"
-          }}
-        />
-        <Button bgColor="#404eed" onClick={loginWithDiscord}>
-          <Image
-            src="/icons/login-with-discord.svg"
-            alt="discord logo"
-            width={146}
-            height={40}
-          />
-        </Button>
       </Box>
     </div>
   );
 };
 
-export default Index;
+export default Signup;
