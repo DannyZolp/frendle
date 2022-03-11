@@ -13,6 +13,30 @@ interface CorrectYellowWrongOutput {
   wrong: string[];
 }
 
+const getAllCYW = (guesses: string[], answer: string) => {
+  let c = new Array<string>();
+  let y = new Array<string>();
+  let w = new Array<string>();
+
+  for (let i = 0; i < guesses.filter((g) => g.length === 5).length; i++) {
+    console.log(guesses[i]);
+    const { correct, yellow, wrong } = getCorrectYellowWrong(
+      guesses[i],
+      answer
+    );
+
+    c = c.concat(correct);
+    y = y.concat(yellow);
+    w = w.concat(wrong);
+  }
+
+  return {
+    correct: c,
+    yellow: y,
+    wrong: w
+  };
+};
+
 const getCorrectYellowWrong = (
   guess: string,
   answer: string
@@ -85,11 +109,13 @@ const Play = ({ supabase }: FrendlePageProps) => {
                   correct: lCorrect,
                   yellow,
                   wrong
-                } = getCorrectYellowWrong(guesses[len - 1], correct);
+                } = getAllCYW(guesses, words[differenceInDays(new Date(), new Date("June 19 2021"))]);
 
-                setCorrectLetters(lCorrect.concat(correctLetters));
-                setYellowLetters(yellow.concat(yellowLetters));
-                setWrongLetters(wrong.concat(wrongLetters));
+                setCorrectLetters(lCorrect);
+                setYellowLetters(yellow);
+                setWrongLetters(wrong);
+
+                console.log(lCorrect, yellow, wrong);
 
                 setCurrentGuess("");
 
@@ -129,6 +155,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
             });
         }
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -146,6 +173,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
           console.log("completed save");
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow, wordleId]);
 
   useEffect(() => {
@@ -161,6 +189,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
         }
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentGuess, lock]);
 
   useEffect(() => {
