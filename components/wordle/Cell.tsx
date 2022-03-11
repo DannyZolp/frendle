@@ -5,7 +5,7 @@ export enum CellType {
   WRONG,
   YELLOW,
   GREEN,
-  RED
+  RED,
 }
 
 interface CellProps {
@@ -40,7 +40,7 @@ export const Cell = styled.div<CellProps>`
 `;
 
 export const CellText = styled.h1`
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: white;
   font-family: "Poppins", sans-serif;
 `;

@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { setAppElement } from "react-modal";
 import { ToastContainer } from "react-toastify";
+import { definitions } from "../types/supabase";
 
 export interface FrendlePageProps {
   supabase: SupabaseClient;
@@ -24,7 +25,16 @@ function MyApp({ Component, pageProps }: AppProps) {
   const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
   const router = useRouter();
 
-  supabase.auth.onAuthStateChange((event) => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    const document = await supabase
+      .from<definitions["users"]>("users")
+      .select("id")
+      .eq("id", session?.user?.id);
+
+    if (document.body?.length === 0 && router.pathname !== "/setup") {
+      router.push("/setup");
+    }
+
     switch (event) {
       case "SIGNED_IN":
         if (unprotectedRoutes.includes(router.pathname)) {
