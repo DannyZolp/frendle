@@ -203,7 +203,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
   useEffect(() => {
     if (rowText[currentRow - 1] === correct) {
       setLock(true);
-      setShowStats(true);
+      setTimeout(() => setShowStats(true), 1000);
     }
   }, [rowText, currentRow, correct]);
 
