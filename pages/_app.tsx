@@ -13,8 +13,8 @@ export interface FrendlePageProps {
   supabase: SupabaseClient;
 }
 
-const protectedRoutes = ["/play"];
-const unprotectedRoutes = ["/"];
+const protectedRoutes = ["/play", "/setup"];
+const unprotectedRoutes = ["/", "/signup"];
 
 setAppElement("#__next");
 

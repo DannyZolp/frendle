@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { useState } from "react";
-import { Box } from "../components/login/Box";
-import { Button } from "../components/login/Button";
-import { Input } from "../components/login/Input";
+import { Box } from "../components/basic/Box";
+import { Button } from "../components/basic/Button";
+import { Input } from "../components/basic/Input";
 import { FrendlePageProps } from "./_app";
 import { toast } from "react-toastify";
 import Link from "next/link";

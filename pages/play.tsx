@@ -6,6 +6,7 @@ import guessable from "../public/guessable.json";
 import { Keyboard } from "../components/wordle/Keyboard";
 import { FrendlePageProps } from "./_app";
 import { definitions } from "../types/supabase";
+import { StatsModal } from "../components/wordle/statsmodal";
 
 interface CorrectYellowWrongOutput {
   correct: string[];
@@ -75,6 +76,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
   const [wrongLetters, setWrongLetters] = useState<string[]>([]);
   const [lock, setLock] = useState(false);
   const [wordleId, setWordleId] = useState("");
+  const [showStats, setShowStats] = useState(false);
 
   useEffect(() => {
     // get the current word
@@ -109,20 +111,15 @@ const Play = ({ supabase }: FrendlePageProps) => {
                   correct: lCorrect,
                   yellow,
                   wrong
-                } = getAllCYW(guesses, words[differenceInDays(new Date(), new Date("June 19 2021"))]);
+                } = getAllCYW(
+                  guesses,
+                  words[differenceInDays(new Date(), new Date("June 19 2021"))]
+                );
 
                 setCorrectLetters(lCorrect);
                 setYellowLetters(yellow);
                 setWrongLetters(wrong);
-
-                console.log(lCorrect, yellow, wrong);
-
                 setCurrentGuess("");
-
-                if (lCorrect.length === correct.length) {
-                  // the user has guessed it
-                  setLock(true);
-                }
               }
 
               return;
@@ -160,9 +157,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
 
   useEffect(() => {
     // save current state to the cloud
-    console.log(wordleId);
     if (wordleId) {
-      console.log("saved", wordleId);
       supabase
         .from<definitions["wordle"]>("wordle")
         .update({
@@ -199,6 +194,13 @@ const Play = ({ supabase }: FrendlePageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentGuess, currentRow]);
 
+  useEffect(() => {
+    if (rowText[currentRow - 1] === correct) {
+      setLock(true);
+      setShowStats(true);
+    }
+  }, [rowText, currentRow, correct]);
+
   const tryNextRow = () => {
     if (currentGuess.length === correct.length && !lock) {
       if (guessable.includes(currentGuess) || words.includes(currentGuess)) {
@@ -218,11 +220,6 @@ const Play = ({ supabase }: FrendlePageProps) => {
         setWrongLetters(wrong.concat(wrongLetters));
 
         setCurrentGuess("");
-
-        if (lCorrect.length === correct.length) {
-          // the user has guessed it
-          setLock(true);
-        }
       }
     }
   };
@@ -238,6 +235,18 @@ const Play = ({ supabase }: FrendlePageProps) => {
         width: "100vw"
       }}
     >
+      <button
+        onClick={() => setShowStats(true)}
+        style={{ position: "absolute", top: 0, left: 0 }}
+      >
+        Show Stats
+      </button>
+      <StatsModal
+        isOpen={showStats}
+        close={() => setShowStats(false)}
+        supabase={supabase}
+        green={currentRow - 1}
+      />
       {/* <input
         onChange={(e) => {
           if (e.target.value.length <= correct.length) {

@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { Box } from "../components/login/Box";
-import { Button } from "../components/login/Button";
-import { Input } from "../components/login/Input";
+import { Box } from "../components/basic/Box";
+import { Button } from "../components/basic/Button";
+import { Input } from "../components/basic/Input";
 import { FrendlePageProps } from "./_app";
 
 const Signup = ({ supabase }: FrendlePageProps) => {

@@ -1,15 +1,15 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Box } from "../components/login/Box";
-import { Button } from "../components/login/Button";
-import { Input } from "../components/login/Input";
+import { Box } from "../components/basic/Box";
+import { Button } from "../components/basic/Button";
+import { Input } from "../components/basic/Input";
 import { definitions } from "../types/supabase";
 import { FrendlePageProps } from "./_app";
 
 enum CheckingUsername {
   CHECKING,
   VALID,
-  TAKEN,
+  TAKEN
 }
 
 const Setup = ({ supabase }: FrendlePageProps) => {
@@ -36,6 +36,7 @@ const Setup = ({ supabase }: FrendlePageProps) => {
     } else {
       setValidUsername(CheckingUsername.CHECKING);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   const createUser = () => {
@@ -44,7 +45,7 @@ const Setup = ({ supabase }: FrendlePageProps) => {
       .insert({
         id: supabase.auth.user()?.id,
         username,
-        displayName: name,
+        displayName: name
       })
       .then(() => router.push("/play"));
   };
@@ -55,7 +56,7 @@ const Setup = ({ supabase }: FrendlePageProps) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
+        height: "100vh"
       }}
     >
       <Box>
@@ -71,7 +72,7 @@ const Setup = ({ supabase }: FrendlePageProps) => {
                 : validUsername === CheckingUsername.VALID
                 ? "green"
                 : "#444"
-            } 1px solid`,
+            } 1px solid`
           }}
         />
         {validUsername === CheckingUsername.TAKEN ? (
