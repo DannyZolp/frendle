@@ -172,6 +172,12 @@ const Play = ({ supabase }: FrendlePageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow, wordleId]);
 
+  const pressLetter = (letter: string) => {
+    if (!lock && currentGuess.length < 5) {
+      setCurrentGuess(currentGuess + letter.toLowerCase());
+    }
+  };
+
   useEffect(() => {
     document.onkeydown = (ev) => {
       ev.preventDefault();
@@ -180,8 +186,8 @@ const Play = ({ supabase }: FrendlePageProps) => {
           setCurrentGuess(currentGuess.slice(0, currentGuess.length - 1));
         } else if (ev.code === "Enter") {
           tryNextRow();
-        } else if (ev.code.startsWith("Key") && currentGuess.length < 5) {
-          setCurrentGuess(currentGuess + ev.key.toLowerCase());
+        } else if (ev.code.startsWith("Key")) {
+          pressLetter(ev.key.toLowerCase());
         }
       }
     };
@@ -198,7 +204,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
   useEffect(() => {
     if (rowText[currentRow - 1] === correct) {
       setLock(true);
-      setShowStats(true);
+      setTimeout(() => setShowStats(true), 1000);
     }
   }, [rowText, currentRow, correct]);
 
@@ -288,9 +294,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
           correct={correctLetters}
           yellow={yellowLetters}
           wrong={wrongLetters}
-          onClick={(k) =>
-            setCurrentGuess(lock ? "" : currentGuess + k.toLowerCase())
-          }
+          onClick={(k) => pressLetter(k.toLowerCase())}
           onBackspace={() =>
             setCurrentGuess(
               lock ? "" : currentGuess.slice(0, currentGuess.length - 1)
