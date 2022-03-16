@@ -7,6 +7,7 @@ import { Keyboard } from "../components/wordle/Keyboard";
 import { FrendlePageProps } from "./_app";
 import { definitions } from "../types/supabase";
 import { StatsModal } from "../components/wordle/statsmodal";
+import { Navbar } from "../components/navbar";
 
 interface CorrectYellowWrongOutput {
   correct: string[];
@@ -235,12 +236,13 @@ const Play = ({ supabase }: FrendlePageProps) => {
         width: "100vw"
       }}
     >
-      <button
+      {/* <button
         onClick={() => setShowStats(true)}
         style={{ position: "absolute", top: 0, left: 0 }}
       >
         Show Stats
-      </button>
+      </button> */}
+      <Navbar supabase={supabase} />
       <StatsModal
         isOpen={showStats}
         close={() => setShowStats(false)}
@@ -260,7 +262,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
       <div
         style={{
           position: "absolute",
-          top: "2vh"
+          top: "7vh"
         }}
       >
         {rowOverlay.map((overlay, idx) => (

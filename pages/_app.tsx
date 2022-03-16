@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { setAppElement } from "react-modal";
 import { ToastContainer } from "react-toastify";
 import { definitions } from "../types/supabase";
+import Head from "next/head";
 
 export interface FrendlePageProps {
   supabase: SupabaseClient;
@@ -69,6 +70,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <title>Frendle</title>
+      </Head>
       <ToastContainer />
       <Component {...pageProps} supabase={supabase} />
     </>
