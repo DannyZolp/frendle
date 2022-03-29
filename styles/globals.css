@@ -1,7 +1,4 @@
-@font-face {
-  font-family: "Poppins", sans-serif;
-  src: url("../public/fonts/poppins.ttf") format("truetype");
-}
+@import url("https://fonts.googleapis.com/css2?family=Poppins&family=Roboto+Slab&display=swap");
 
 html {
   background-color: #222;

@@ -7,11 +7,12 @@ import { FrendlePageProps } from "./_app";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
-const Index = ({ supabase }: FrendlePageProps) => {
+const Index = ({ supabase, setConnecting }: FrendlePageProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const loginWithEmail = () => {
+    setConnecting(true);
     supabase.auth
       .signIn({
         email,
@@ -25,9 +26,16 @@ const Index = ({ supabase }: FrendlePageProps) => {
   };
 
   const loginWithDiscord = () => {
-    supabase.auth.signIn({
-      provider: "discord"
-    });
+    setConnecting(true);
+    supabase.auth.signIn(
+      {
+        provider: "discord"
+      },
+      {
+        redirectTo:
+          process.env.NODE_ENV === "development" ? "http://localhost:3000" : ""
+      }
+    );
   };
 
   return (
@@ -41,24 +49,30 @@ const Index = ({ supabase }: FrendlePageProps) => {
     >
       <Box>
         <h1 style={{ margin: "1px" }}>Login</h1>
-        <Input
-          placeholder="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Input
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button
-          bgColor="#444"
-          style={{ marginTop: "2.5%", padding: "14px 16px" }}
-          onClick={loginWithEmail}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            loginWithEmail();
+          }}
         >
-          Login with Email
-        </Button>
+          <Input
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            bgColor="#444"
+            style={{ marginTop: "2.5%", padding: "14px 16px" }}
+          >
+            Login with Email
+          </Button>
+        </form>
         <Link href="/signup" passHref>
           <a style={{ color: "white", fontSize: "14px", margin: "0" }}>
             sign up?

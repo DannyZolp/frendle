@@ -87,6 +87,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
     supabase
       .from<definitions["wordle"]>("wordle")
       .select("guesses, created_at, id")
+      .eq("owner_id", supabase.auth.user()?.id ?? "")
       .then(async ({ data }) => {
         if (data && (data?.length ?? 0) > 0) {
           // the user has made a save in the past
@@ -248,7 +249,7 @@ const Play = ({ supabase }: FrendlePageProps) => {
       >
         Show Stats
       </button> */}
-      <Navbar supabase={supabase} />
+      <Navbar supabase={supabase} showStats={() => setShowStats(true)} />
       <StatsModal
         isOpen={showStats}
         close={() => setShowStats(false)}
