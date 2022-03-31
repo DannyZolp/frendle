@@ -25,8 +25,15 @@ An easy way to play competitive, daily Wordles against your friends
 yarn install
 ```
 
-2. Set the environment variables
-3. Run the development server
+2. Create a local environment variable file
+
+```bash
+cp .env.local.example .env.local
+```
+
+3. Set environment variables 
+
+4. Run the development server
 
 ```bash
 yarn dev
